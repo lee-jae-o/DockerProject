@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 탈퇴</title>
+    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+
+        // HTML로딩이 완료되고, 실행됨
+        $(document).ready(function () {
+            // 회원 탈퇴 버튼 클릭했을 때
+            $("#withdrawBtn").on("click", function () {
+                var userId = $("#userId").val(); // 입력된 아이디 가져오기
+                var password = $("#password").val(); // 입력된 비밀번호 가져오기
+
+                // 입력값이 비어있는지 확인
+                if (userId.trim() === "" || password.trim() === "") {
+                    alert("아이디와 비밀번호를 모두 입력해주세요.");
+                    return;
+                }
+
+                // Ajax를 이용해 아이디와 비밀번호를 전달하여 회원 탈퇴 요청을 보냄
+                $.ajax({
+                    url: "/user/withdrawUser",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        userId: userId,
+                        password: password
+                    },
+                    success: function (json) {
+                        if (json.result === 1) { // 회원 탈퇴 성공
+                            alert(json.msg);
+                            location.href = "/html/index.html"; // 메인 화면으로 이동
+                        } else { // 회원 탈퇴 실패
+                            alert(json.msg);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div>
+    <h2>회원 탈퇴</h2>
+    <form>
+        <div>
+            <label for="userId">아이디:</label>
+            <input type="text" id="userId" name="userId">
+        </div>
+        <div>
+            <label for="password">비밀번호:</label>
+            <input type="password" id="password" name="password">
+        </div>
+        <div>
+            <button id="withdrawBtn" type="button">회원 탈퇴하기</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
